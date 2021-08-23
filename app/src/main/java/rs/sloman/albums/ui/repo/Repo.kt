@@ -1,4 +1,9 @@
 package rs.sloman.albums.ui.repo
 
-class Repo : Repository {
+import rs.sloman.albums.ui.network.AlbumsApi
+import javax.inject.Inject
+
+class Repo @Inject constructor(
+
+) : Repository {
 }
