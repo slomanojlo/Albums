@@ -1,6 +1,7 @@
 package rs.sloman.albums.ui.activities
 
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
@@ -20,6 +21,13 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        viewModel.getAlbums()
+
+        viewModel.albums.observe(this){
+            Log.d("Test", "Albums")
+        }
+
         setContent {
             AlbumsTheme {
                 // A surface container using the 'background' color from the theme

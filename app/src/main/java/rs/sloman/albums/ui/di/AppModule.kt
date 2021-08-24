@@ -1,5 +1,6 @@
 package rs.sloman.albums.ui.di
 
+import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -7,8 +8,6 @@ import dagger.hilt.components.SingletonComponent
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import rs.sloman.albums.ui.network.AlbumsApi
-import rs.sloman.albums.ui.repo.Repo
-import rs.sloman.albums.ui.repo.Repository
 import javax.inject.Singleton
 
 
@@ -18,14 +17,11 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideRepo() : Repository = Repo()
-
-    @Provides
-    @Singleton
     fun provideRetrofit(): Retrofit =
         Retrofit.Builder()
             .baseUrl(AlbumsApi.BASE_URL)
             .addConverterFactory(GsonConverterFactory.create())
+            .addCallAdapterFactory(CoroutineCallAdapterFactory())
             .build()
 
     @Provides
