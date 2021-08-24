@@ -1,5 +1,6 @@
 package rs.sloman.albums.ui.viewmodel
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -12,16 +13,15 @@ import javax.inject.Inject
 @HiltViewModel
 class AlbumsViewModel @Inject constructor(private val repo: Repo) : ViewModel() {
 
-    var albums: MutableLiveData<List<Album>?> = MutableLiveData()
+    private var _albums: MutableLiveData<List<Album>> = MutableLiveData()
+    var albums = _albums.asLiveData()
 
-    fun getAlbums(){
+    init {
         viewModelScope.launch {
-            try {
-                albums.value = repo.getAlbums()
-            } catch (e: Exception) {
-
-            }
+            _albums.value = repo.getAlbums()
         }
 
     }
 }
+
+fun <T> MutableLiveData<T>.asLiveData() = this as LiveData<T>
