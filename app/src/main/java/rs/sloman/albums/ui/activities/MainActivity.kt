@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
+import androidx.compose.ui.Modifier
 import dagger.hilt.android.AndroidEntryPoint
 import rs.sloman.albums.ui.albums.AlbumsScreen
 import rs.sloman.albums.ui.theme.AlbumsTheme
@@ -19,7 +20,12 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             AlbumsTheme {
-                AlbumsScreen(listOfStrings = viewModel.albums)
+                AlbumsScreen(
+                    modifier = Modifier,
+                    viewModel = viewModel,
+                ) {
+                    viewModel.fetchAlbums()
+                }
             }
         }
 
