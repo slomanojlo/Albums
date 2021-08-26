@@ -6,7 +6,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
@@ -17,6 +17,7 @@ import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.launch
 import rs.sloman.albums.R
 import rs.sloman.albums.data.Album
+import rs.sloman.albums.data.Status
 import rs.sloman.albums.ui.viewmodel.AlbumsViewModel
 
 
@@ -26,16 +27,16 @@ fun AlbumsScreen(
     viewModel: AlbumsViewModel,
     onRetry: (() -> Unit)
 ) {
-    val myItems = viewModel.albums.collectAsState()
+    val myItems = viewModel.albums.observeAsState()
+    val status = viewModel.status.observeAsState()
 
     Scaffold(
         topBar = { AlbumsHeader() },
         content = {
-
-            if (!myItems.value.isNullOrEmpty()) {
-                AlbumsList(items = myItems.value!!)
-            } else {
-                Retry(onRetry = onRetry)
+            when(status.value) {
+                Status.SUCCESS -> AlbumsList(items = myItems.value!!)
+                Status.ERROR -> Retry(onRetry = onRetry)
+                Status.LOADING -> LoadingProgressBar()
             }
         })
 }
@@ -63,6 +64,15 @@ fun Retry(
             Text(text = stringResource(R.string.retry))
         }
     }
+}
+
+@Composable
+fun LoadingProgressBar() {
+    CircularProgressIndicator(
+        modifier = Modifier
+            .fillMaxSize()
+            .wrapContentSize(Alignment.Center)
+    )
 }
 
 @Composable
