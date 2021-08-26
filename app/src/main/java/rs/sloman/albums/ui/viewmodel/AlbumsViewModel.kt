@@ -33,7 +33,7 @@ class AlbumsViewModel @Inject constructor(private val repo: Repo) : ViewModel() 
                 _status.value = Status.SUCCESS
             } catch (e: Exception) {
                 Log.d("Exception", "occurred")
-                _status.value = Status.ERROR
+                _status.value = if(albums.value != null) Status.SUCCESS else Status.ERROR
             }
         }
     }

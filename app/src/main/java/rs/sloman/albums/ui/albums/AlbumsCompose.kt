@@ -33,8 +33,8 @@ fun AlbumsScreen(
     Scaffold(
         topBar = { AlbumsHeader() },
         content = {
-            when(status.value) {
-                Status.SUCCESS -> AlbumsList(items = myItems.value!!)
+            AlbumsList(items = myItems.value)
+            when (status.value) {
                 Status.ERROR -> Retry(onRetry = onRetry)
                 Status.LOADING -> LoadingProgressBar()
             }
@@ -76,15 +76,17 @@ fun LoadingProgressBar() {
 }
 
 @Composable
-fun AlbumsList(items: List<Album>) {
+fun AlbumsList(items: List<Album>?) {
     val scope = rememberCoroutineScope()
     val snackbarHostState = remember { SnackbarHostState() }
 
-    LazyColumn {
-        items(items = items) { scopeItem ->
-            AlbumItem(name = scopeItem.title) {
-                scope.launch {
-                    snackbarHostState.showSnackbar(message = it)
+    items?.let{
+        LazyColumn {
+            items(items = it) { scopeItem ->
+                AlbumItem(name = scopeItem.title) {
+                    scope.launch {
+                        snackbarHostState.showSnackbar(message = it)
+                    }
                 }
             }
         }
