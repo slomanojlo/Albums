@@ -5,7 +5,6 @@ import androidx.room.*
 @Dao
 interface AlbumsDAO {
 
-
     @Query("SELECT * FROM album")
     fun getLiveDataAlbumsFromDB() : LiveData<List<Album>?>
 
@@ -20,7 +19,7 @@ interface AlbumsDAO {
     fun deleteAll() : Int
 
     @Transaction
-    suspend fun reinsertAlbums(albums: List<Album>?) {
+    fun reinsertAlbums(albums: List<Album>?) {
         deleteAll()
         if(albums.isNullOrEmpty()) return
         insertProduct(albums = albums)
