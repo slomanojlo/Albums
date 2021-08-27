@@ -9,5 +9,5 @@ interface AlbumsApi {
     }
 
     @GET("albums")
-    suspend fun getAlbums() : List<Album>
+    suspend fun getAlbums() : List<Album>?
 }

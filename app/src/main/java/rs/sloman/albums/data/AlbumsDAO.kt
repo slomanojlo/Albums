@@ -1,13 +1,13 @@
 package rs.sloman.albums.data
+import androidx.lifecycle.LiveData
 import androidx.room.*
-import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface AlbumsDAO {
 
 
     @Query("SELECT * FROM album")
-    fun getAlbumsFromDB() : Flow<List<Album>>
+    fun getAlbumsFromDB() : LiveData<List<Album>?>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertProduct(albums : List<Album>) : List<Long>
@@ -16,8 +16,9 @@ interface AlbumsDAO {
     fun deleteAll() : Int
 
     @Transaction
-    suspend fun reinsertAlbums(albums: List<Album>) : List<Long>{
+    suspend fun reinsertAlbums(albums: List<Album>?) {
         deleteAll()
-        return insertProduct(albums = albums)
+        if(albums.isNullOrEmpty()) return
+        insertProduct(albums = albums)
     }
 }

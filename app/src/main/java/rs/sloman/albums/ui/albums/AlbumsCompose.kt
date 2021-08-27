@@ -1,5 +1,6 @@
 package rs.sloman.albums.ui.albums
 
+import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -7,7 +8,6 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -24,19 +24,31 @@ import rs.sloman.albums.ui.viewmodel.AlbumsViewModel
 @Composable
 fun AlbumsScreen(
     modifier: Modifier = Modifier,
+    scaffoldState: ScaffoldState = rememberScaffoldState(),
     viewModel: AlbumsViewModel,
     onRetry: (() -> Unit)
 ) {
     val myItems = viewModel.albums.observeAsState()
     val status = viewModel.status.observeAsState()
+    val scope = rememberCoroutineScope()
 
     Scaffold(
+        scaffoldState = scaffoldState,
         topBar = { AlbumsHeader() },
         content = {
-            AlbumsList(items = myItems.value)
+            AlbumsList(
+                items = myItems.value,
+                scaffoldState = scaffoldState,
+            ){
+                scope.launch {
+                    scaffoldState.snackbarHostState.showSnackbar(message = it)
+                }
+            }
+
             when (status.value) {
                 Status.ERROR -> Retry(onRetry = onRetry)
                 Status.LOADING -> LoadingProgressBar()
+                Status.SUCCESS -> Log.d("AlbumsCompose", "Data loaded.")
             }
         })
 }
@@ -76,18 +88,18 @@ fun LoadingProgressBar() {
 }
 
 @Composable
-fun AlbumsList(items: List<Album>?) {
-    val scope = rememberCoroutineScope()
-    val snackbarHostState = remember { SnackbarHostState() }
+fun AlbumsList(
+    items: List<Album>?,
+    scaffoldState: ScaffoldState = rememberScaffoldState(),
+    onClick: (String) -> Unit
+) {
 
-    items?.let{
+    items?.let {
         LazyColumn {
             items(items = it) { scopeItem ->
-                AlbumItem(name = scopeItem.title) {
-                    scope.launch {
-                        snackbarHostState.showSnackbar(message = it)
-                    }
-                }
+                AlbumItem(name = scopeItem.title,
+                    onClick = onClick
+                )
             }
         }
     }

@@ -24,7 +24,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier,
                     viewModel = viewModel,
                 ) {
-                    viewModel.fetchAlbums()
+                    viewModel.fetchAlbumsFromServer()
                 }
             }
         }
