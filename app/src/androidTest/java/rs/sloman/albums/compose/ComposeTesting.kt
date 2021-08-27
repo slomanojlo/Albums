@@ -1,4 +1,4 @@
-package rs.sloman.albums
+package rs.sloman.albums.compose
 
 import androidx.compose.ui.test.*
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
@@ -6,6 +6,7 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
+import rs.sloman.albums.R
 import rs.sloman.albums.ui.activities.MainActivity
 
 /**

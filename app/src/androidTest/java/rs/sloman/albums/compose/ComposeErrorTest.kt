@@ -1,4 +1,4 @@
-package rs.sloman.albums
+package rs.sloman.albums.compose
 
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
@@ -7,6 +7,8 @@ import androidx.test.platform.app.InstrumentationRegistry
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
+import rs.sloman.albums.Constants
+import rs.sloman.albums.R
 import rs.sloman.albums.ui.activities.MainActivity
 
 class ComposeErrorTest {
