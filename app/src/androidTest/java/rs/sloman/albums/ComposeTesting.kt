@@ -19,6 +19,7 @@ class ComposeTesting {
     @get:Rule
     val composeAndroidTestRule = createAndroidComposeRule<MainActivity>()
 
+
     @Test
     fun checkToolbarForAppNameExists() {
         composeAndroidTestRule
@@ -40,6 +41,8 @@ class ComposeTesting {
             .assertDoesNotExist()
     }
 
+
+
     @Test
     fun checkSnackBarSuccessfullyDisplayed() {
 
@@ -53,13 +56,7 @@ class ComposeTesting {
         composeAndroidTestRule
             .onNodeWithText("Name $text")
             .assertIsDisplayed()
-    }
 
-    @Test
-    fun checkLoaderIsInitiallyDisplayed() {
-        composeAndroidTestRule
-            .onNodeWithContentDescription("CircularProgressIndicator")
-            .assertIsDisplayed()
     }
 
 }

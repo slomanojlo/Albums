@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import rs.sloman.albums.data.Album
 import rs.sloman.albums.data.Status
@@ -14,7 +15,7 @@ import javax.inject.Inject
 @HiltViewModel
 class AlbumsViewModel @Inject constructor(private val repo: Repo) : ViewModel() {
 
-    val albums: LiveData<List<Album>?> = repo.getAlbumsFromDB()
+    val albums: LiveData<List<Album>?> = repo.getLiveDataAlbumsFromDB()
 
     private val _status: MutableLiveData<Status> = MutableLiveData<Status>(Status.LOADING)
     val status: LiveData<Status> = _status.asLiveData()
@@ -24,14 +25,14 @@ class AlbumsViewModel @Inject constructor(private val repo: Repo) : ViewModel() 
     }
 
     fun fetchAlbumsFromServer() {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             try {
-                _status.value = Status.LOADING
+                _status.postValue(Status.LOADING)
                 repo.updateAlbums()
-                _status.value = Status.SUCCESS
+                _status.postValue(Status.SUCCESS)
             } catch (e: Exception) {
                 val albums = repo.getAlbumsFromDB()
-                _status.value = if (albums.value != null) Status.SUCCESS else Status.ERROR
+                _status.postValue(if (albums.isNullOrEmpty()) Status.ERROR else Status.SUCCESS)
             }
         }
     }

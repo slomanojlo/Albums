@@ -7,7 +7,11 @@ interface AlbumsDAO {
 
 
     @Query("SELECT * FROM album")
-    fun getAlbumsFromDB() : LiveData<List<Album>?>
+    fun getLiveDataAlbumsFromDB() : LiveData<List<Album>?>
+
+    @Query("SELECT * FROM album")
+    fun getAlbumsFromDB() : List<Album>?
+
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertProduct(albums : List<Album>) : List<Long>

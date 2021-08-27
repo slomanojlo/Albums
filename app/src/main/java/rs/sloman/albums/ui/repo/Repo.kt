@@ -10,7 +10,8 @@ class Repo @Inject constructor(
     private val api: AlbumsApi,
     private val albumsDao: AlbumsDAO
 ) {
-    fun getAlbumsFromDB(): LiveData<List<Album>?> = albumsDao.getAlbumsFromDB()
+    fun getLiveDataAlbumsFromDB(): LiveData<List<Album>?> = albumsDao.getLiveDataAlbumsFromDB()
+    fun getAlbumsFromDB() : List<Album>? = albumsDao.getAlbumsFromDB()
 
     suspend fun updateAlbums() {
         val remoteAlbums = api.getAlbums()
