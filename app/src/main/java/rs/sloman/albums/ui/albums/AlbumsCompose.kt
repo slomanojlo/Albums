@@ -12,6 +12,8 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.launch
@@ -39,9 +41,9 @@ fun AlbumsScreen(
             AlbumsList(
                 items = myItems.value,
                 scaffoldState = scaffoldState,
-            ){
+            ) {
                 scope.launch {
-                    scaffoldState.snackbarHostState.showSnackbar(message = it)
+                    scaffoldState.snackbarHostState.showSnackbar(message = "Name $it")
                 }
             }
 
@@ -71,6 +73,7 @@ fun Retry(
         modifier = modifier
             .fillMaxSize()
             .wrapContentSize(Alignment.Center)
+            .semantics { contentDescription = "Retry" }
     ) {
         Button(onClick = onRetry) {
             Text(text = stringResource(R.string.retry))
@@ -84,6 +87,7 @@ fun LoadingProgressBar() {
         modifier = Modifier
             .fillMaxSize()
             .wrapContentSize(Alignment.Center)
+            .semantics { contentDescription = "CircularProgressIndicator" }
     )
 }
 
@@ -91,13 +95,17 @@ fun LoadingProgressBar() {
 fun AlbumsList(
     items: List<Album>?,
     scaffoldState: ScaffoldState = rememberScaffoldState(),
-    onClick: (String) -> Unit
+    modifier: Modifier = Modifier.semantics {
+        contentDescription = "List with Albums"
+    },
+    onClick: (String) -> Unit,
 ) {
 
     items?.let {
         LazyColumn {
             items(items = it) { scopeItem ->
-                AlbumItem(name = scopeItem.title,
+                AlbumItem(
+                    name = scopeItem.title,
                     onClick = onClick
                 )
             }
